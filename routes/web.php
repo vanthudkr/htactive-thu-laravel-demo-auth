@@ -19,4 +19,11 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('admin/routes', 'HomeController@admin')->middleware('admin');
+// Route::get('admin/routes', 'HomeController@admin')->middleware('admin');
+
+// Route::get('admin/tables', 'HomeController@adminTable')->middleware('admin')->name('table');
+
+Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
+    Route::get('dashboard', 'HomeController@admin')->name('dashboard');
+    Route::get('table', 'HomeController@adminTable')->name('table');;
+});
