@@ -18,47 +18,11 @@
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="{{ asset('css/demo.css')}}" rel="stylesheet" />
   <link href="{{ asset('css/admin.css') }}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 </head>
 
 <body class="">
-  <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white" data-image="{{ url('/img/sidebar-1.jpg') }}">
-      <!--
-        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
-
-        Tip 2: you can also add an image using data-image tag
-    -->
-      <div class="logo">
-        <a href="{{ route('dashboard') }}" class="simple-text logo-normal">
-          HT Active
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-        <ul class="nav">
-            <li class="nav-item active  ">
-                <a class="nav-link" href="{{ route('dashboard') }}">
-                <i class="material-icons">dashboard</i>
-                <p>Dashboard</p>
-                </a>
-            <li class="nav-item ">
-                <a class="nav-link" href="#">
-                <i class="material-icons">person</i>
-                <p>User Profile</p>
-                </a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link" href="{{ route('table') }}">
-                    <i class="material-icons">content_paste</i>
-                    <p>Table List</p>
-                </a>
-                <ul class="dropdown-menu dropdown-menu1">
-                    <li><a href="#">Service</a></li>
-                    <li><a href="#">About</a></li>
-                </ul>
-            </li>
-        </ul>
-      </div>
-    </div>
+  @yield('sidebar')
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
@@ -82,83 +46,44 @@
                 </button>
               </div>
             </form>
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <i class="material-icons">dashboard</i>
-                  <p class="d-lg-none d-md-block">
-                    Stats
-                  </p>
+            <ul class="navbar-nav dropdown">
+                <a href="">
+                    <li class="nav-item nav-link">
+                        <i class="fas fa-user"> &nbsp  {{ auth::user()->name }}</i>
+                    </li>
                 </a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="material-icons">notifications</i>
-                  <span class="notification">5</span>
-                  <p class="d-lg-none d-md-block">
-                    Some Actions
-                  </p>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Mike John responded to your email</a>
-                  <a class="dropdown-item" href="#">You have 5 new tasks</a>
-                  <a class="dropdown-item" href="#">You're now friend with Andrew</a>
-                  <a class="dropdown-item" href="#">Another Notification</a>
-                  <a class="dropdown-item" href="#">Another One</a>
-                </div>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link" href="#" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="-icons">person</i>
-                  <p class="d-lg-none d-md-block">
-                    Account
-                  </p>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                  <a class="dropdown-item" href="#">Profile</a>
-                  <a class="dropdown-item" href="#">Settings</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Log out</a>
-                </div>
-              </li>
+                <ul class="dropdown-menu dropdown-menu1">
+                    <li>
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                            Logout &nbsp <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <form id="frm-logout" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    </li>
+                </ul>
             </ul>
           </div>
         </div>
       </nav>
       <!-- End Navbar -->
+      @yield('table')
+      @yield('service-table')
       @yield('content')
-      <footer class="footer">
-        <div class="container-fluid">
-          <nav class="float-left">
-            <ul>
-              <li>
-                <a href="https://www.creative-tim.com">
-                  Creative Tim
-                </a>
-              </li>
-              <li>
-                <a href="https://creative-tim.com/presentation">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="http://blog.creative-tim.com">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="https://www.creative-tim.com/license">
-                  Licenses
-                </a>
-              </li>
-            </ul>
-          </nav>
-          <div class="copyright float-right">
-            &copy; <span>Create by HT Active</span>
-          </div>
-        </div>
-      </footer>
+      @yield('footer')
     </div>
   </div>
 </body>
+<script>
+// Add active class to the current button (highlight it)
+var header = document.getElementById("nav");
+var div = header.getElementsByClassName("nav-item");
+for (var i = 0; i < div.length; i++) {
+  btns[i].addEventListener("click", function() {
+  var current = document.getElementsByClassName("active");
+  current[0].className = current[0].className.replace(" active", "");
+  this.className += " active";
+  });
+}
+</script>
 </html>

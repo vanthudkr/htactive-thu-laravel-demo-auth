@@ -25,5 +25,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('dashboard', 'HomeController@admin')->name('dashboard');
-    Route::get('table', 'HomeController@adminTable')->name('table');;
+    Route::get('table', 'HomeController@adminTable')->name('table');
+    Route::get('service', 'ServiceController@index')->name('service-index');
 });

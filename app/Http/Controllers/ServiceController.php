@@ -14,7 +14,8 @@ class ServiceController extends Controller
    */
   public function index()
   {
-    $services = DB::table('services')->get();
+    $services = Service::all();
+    return view('auth.services.index', compact('services'));
   }
 
   /**

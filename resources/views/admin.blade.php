@@ -1,4 +1,5 @@
 @extends('layouts.examples.dashboard')
+@include('side-bar')
 @section('content')
 <div class="content">
         <div class="container-fluid">
@@ -415,4 +416,5 @@
           </div>
         </div>
       </div>
-@endsection
+    @include('footer')
+    @endsection
