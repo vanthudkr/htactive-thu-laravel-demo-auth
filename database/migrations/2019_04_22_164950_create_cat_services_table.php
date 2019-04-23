@@ -14,10 +14,12 @@ class CreateCatServicesTable extends Migration
     public function up()
     {
         Schema::create('cat_services', function (Blueprint $table) {
-            $table->increment('id');
-            $table->varchar('title');
-            $table->varchar('icon');
+            $table->increments('id');
+            $table->string('title');
+            $table->string('icon');
             $table->text('content');
+            $table->integer('parent_id');
+            $table->tinyInteger('is_deleted')->default(1);
             $table->timestamps();
         });
     }

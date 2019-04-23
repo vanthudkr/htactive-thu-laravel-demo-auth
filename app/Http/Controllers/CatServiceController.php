@@ -14,7 +14,8 @@ class CatServiceController extends Controller
      */
     public function index()
     {
-        //
+        $catServices = CatService::all();
+        return view('auth.catServices.index', compact('catServices'));
     }
 
     /**

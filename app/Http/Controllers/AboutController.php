@@ -14,7 +14,8 @@ class AboutController extends Controller
      */
     public function index()
     {
-        //
+        $abouts = About::all();
+        return view('auth.abouts.index', compact('abouts'));
     }
 
     /**

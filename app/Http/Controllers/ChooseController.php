@@ -14,7 +14,8 @@ class ChooseController extends Controller
      */
     public function index()
     {
-        //
+        $chooses = Choose::all();
+        return view('auth.chooses.index', compact('chooses'));
     }
 
     /**

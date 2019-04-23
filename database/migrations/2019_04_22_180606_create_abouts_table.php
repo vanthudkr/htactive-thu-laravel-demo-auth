@@ -14,10 +14,11 @@ class CreateAboutsTable extends Migration
     public function up()
     {
         Schema::create('abouts', function (Blueprint $table) {
-            $table->increment('id');
-            $table->varchar('title');
-            $table->varchar('icon');
+            $table->increments('id');
+            $table->string('title');
+            $table->string('icon');
             $table->text('content');
+            $table->tinyInteger('is_deleted')->default(1);
             $table->timestamps();
         });
     }

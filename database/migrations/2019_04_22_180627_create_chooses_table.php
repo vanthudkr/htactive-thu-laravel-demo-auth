@@ -14,10 +14,11 @@ class CreateChoosesTable extends Migration
     public function up()
     {
         Schema::create('chooses', function (Blueprint $table) {
-            $table->increment('id');
-            $table->varchar('title');
-            $table->text('image');
+            $table->increments('id');
+            $table->string('title');
+            $table->longText('image');
             $table->text('content');
+            $table->tinyInteger('is_deleted')->default(1);
             $table->timestamps();
         });
     }

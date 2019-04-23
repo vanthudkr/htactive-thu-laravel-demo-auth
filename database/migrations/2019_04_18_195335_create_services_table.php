@@ -18,6 +18,8 @@ class CreateServicesTable extends Migration
             $table->string('title');
             $table->text('content');
             $table->longText('image');
+            $table->integer('catService_id')->unsigned();
+            $table->tinyInteger('is_deleted')->default(1);
             $table->timestamps();
         });
     }

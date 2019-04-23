@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+use App\Service;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +25,16 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // Route::get('admin/tables', 'HomeController@adminTable')->middleware('admin')->name('table');
 
-Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
+Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('dashboard', 'HomeController@admin')->name('dashboard');
     Route::get('table', 'HomeController@adminTable')->name('table');
+
     Route::get('service', 'ServiceController@index')->name('service-index');
+    Route::get('service/create', 'ServiceController@create')->name('service-create');
+
+    Route::get('about', 'AboutController@index')->name('about-index');
+
+    Route::get('catService', 'CatServiceController@index')->name('catService-index');
+
+    Route::get('choose', 'ChooseController@index')->name('choose-index');
 });

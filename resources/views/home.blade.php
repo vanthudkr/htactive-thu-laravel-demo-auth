@@ -1,21 +1,21 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container">
+<div class="container">
     @if(\Session::has('error'))
-        <div class="alert alert-danger">
+    <div class="alert alert-danger">
         {{\Session::get('error')}}
-        </div>
+    </div>
     @endif
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Dashboard</div>
-                        <?php if(auth()->user()->isAdmin == 1){?>
-                            <div class="panel-body">
-                            <a href="{{ route('dashboard')}}">Admin</a>
-                        </div><?php } else echo '<div class="panel-heading">Normal User</div>';?>
-                    </div>
-                </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dashboard</div>
+                <?php if (auth()->user()->is_admin == 1) { ?>
+                    <div class="panel-body">
+                        <a href="{{ route('dashboard')}}">Admin</a>
+                    </div><?php } else echo '<div class="panel-heading">Normal User</div>'; ?>
             </div>
         </div>
+    </div>
+</div>
 @endsection
