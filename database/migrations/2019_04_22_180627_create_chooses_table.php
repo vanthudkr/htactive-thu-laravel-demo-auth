@@ -15,9 +15,9 @@ class CreateChoosesTable extends Migration
     {
         Schema::create('chooses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->longText('image');
-            $table->text('content');
+            $table->string('title')->nullable();
+            $table->longText('image')->nullable();
+            $table->text('content')->nullable();
             $table->tinyInteger('is_deleted')->default(1);
             $table->timestamps();
         });

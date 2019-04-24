@@ -31,6 +31,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::get('service', 'ServiceController@index')->name('service-index');
     Route::get('service/create', 'ServiceController@create')->name('service-create');
+    Route::get('service/delete', 'ServiceController@destroy')->name('service-delete');
+    Route::get('service/back', 'ServiceController@back')->name('service-back');
+    Route::resource('/service', 'ServiceController');
 
     Route::get('about', 'AboutController@index')->name('about-index');
 

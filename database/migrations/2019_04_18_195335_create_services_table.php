@@ -15,9 +15,9 @@ class CreateServicesTable extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->text('content');
-            $table->longText('image');
+            $table->string('title')->nullable();
+            $table->text('content')->nullable();
+            $table->longText('image')->nullable();
             $table->integer('catService_id')->unsigned();
             $table->tinyInteger('is_deleted')->default(1);
             $table->timestamps();

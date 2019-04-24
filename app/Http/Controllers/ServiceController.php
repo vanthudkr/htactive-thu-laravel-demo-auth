@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use App\CatService;
 
 class ServiceController extends Controller
 {
@@ -26,8 +27,8 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        $services = Service::all();
-        return view('auth.services.create', compact('services'));
+        $catService = CatService::pluck('title', 'id')->all();
+        return view('auth.services.create', compact('catService'));
     }
 
     /**
@@ -40,8 +41,22 @@ class ServiceController extends Controller
     {
         $this->validate($request, [
             'title' => 'required',
-            'content' => 'required|max:250',
+            'content' => 'required',
+            'catService_id' => 'required',
+            'image',
+            'is_deleted'
         ]);
+
+        $input = $request->all();
+        $input['is_deleted'] = 1;
+        if ($request->hasFile('image')) {
+            $filename = $request->file('image')->getClientOriginalName();
+            $request->image->move('img/', $filename);
+            $input['image'] = 'img/' . $filename;
+        }
+
+        Service::create($input);
+        return back()->with('success', 'Service has been created');
     }
 
     /**
@@ -59,9 +74,11 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function edit(Service $service)
+    public function edit($id)
     {
-        //
+        $service = Service::findOrFail($id);
+        $catService = CatService::all();
+        return view('auth.services.edit', compact('service', 'catService'));
     }
 
     /**
@@ -71,9 +88,32 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request, $id)
     {
-        //
+        $service = Service::findOrFail($id);
+        $catService = CatService::findOrFail($id);
+        $this->validate($request, [
+            'title' => 'required|min:5|max:35',
+            'content' => 'required|min:5|max:500',
+            'catService_id',
+            'image',
+        ], [
+            'title.required' => 'The title field is required.',
+            'title.min' => 'The title must be at least 5 characters.',
+            'title.max' => 'The title may not be greater than 35 characters.',
+            'content.required' => 'The content field is required.',
+            'content.min' => 'The content must be at least 5 characters.',
+            'content.max' => 'The content may not be greater than 500 characters.',
+        ]);
+
+        $input = $request->all();
+        if ($request->hasFile('image')) {
+            $filename = $request->file('image')->getClientOriginalName();
+            $request->image->move('img/', $filename);
+            $input['image'] = 'img/' . $filename;
+        }
+        $service->update($input);
+        return redirect('auth.services.index')->with('success', 'The service has edited!');
     }
 
     /**
@@ -82,8 +122,18 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
+    public function destroy($id)
     {
-        //
+        $service = Service::find($id);
+        $image = $service->image;
+        File::delete($image);
+        $service->delete();
+        return redirect('admin/service')->with('success', 'Service has been deleted');
+    }
+
+    /** Function to back*/
+    public function back()
+    {
+        return Redirect::back();
     }
 }

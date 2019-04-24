@@ -9,7 +9,21 @@
                     <div class="card-header card-header-primary">
                         <h4 class="card-title ">Service Table</h4>
                         <p class="card-category"> Here you can do anything !!!</p>
-                        <a href="{{ route('service-create') }}">
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div><br />
+                        @endif
+                        @if (\Session::has('success'))
+                        <div class="alert alert-success">
+                            <p>{{ \Session::get('success') }}</p>
+                        </div><br />
+                        @endif
+                        <a href="{{ route('service.create') }}">
                             <button class="button-create btn btn-primary"><i class="i-create fas fa-plus-square"></i>Create New Service</button>
                         </a>
                     </div>
@@ -29,13 +43,17 @@
                                     <tr>
                                         <td>{{ $service -> id }}</td>
                                         <td>{{ $service -> title }}</td>
-                                        <td> <img src="{{ asset($service -> image) }}" width="50" height="50" alt=""> </td>
+                                        <td> <img src="{{$service->image ? asset($service -> image) : 'http://placehold.it/50x50'}}" width="50" height="50" alt=""> </td>
                                         <td>{{ $service->catService ? $service->catService->title : 'Uncategorized' }}</td>
                                         <td>{{ $service -> content }}</td>
                                         <td>
                                             <a href=" #"><i class="fas fa-eye"></i></a>
-                                            <a href="#"><i class="fas fa-edit"></i></a>
-                                            <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                            <a href="{{ route('service.edit', $service['id']) }}"><i class="fas fa-edit"></i></a>
+                                            <form style="margin-left: 36px; margin-top: -26px" action="{{ route('service.destroy', $service['id'])}}" method="post">
+                                                {{csrf_field()}}
+                                                <input name="_method" type="hidden" value="DELETE">
+                                                <button onclick="return confirm('Are you sure?')" style="border:0px; background-color: #ffffff; color: #9c27b0; cursor: pointer" type="submit"><i class="fas fa-trash-alt"></i></button>
+                                            </form>
                                         </td>
                                     </tr>
                                     @endforeach

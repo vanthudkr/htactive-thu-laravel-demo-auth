@@ -15,9 +15,9 @@ class CreateCatServicesTable extends Migration
     {
         Schema::create('cat_services', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->string('icon');
-            $table->text('content');
+            $table->string('title')->nullable();
+            $table->string('icon')->nullable();
+            $table->text('content')->nullable();
             $table->integer('parent_id');
             $table->tinyInteger('is_deleted')->default(1);
             $table->timestamps();

@@ -20,7 +20,7 @@
                         <p>Table List</p>
                     </a>
                     <ul class="dropdown-menu dropdown-menu1">
-                        <li><a href="{{ route('service-index') }}">Service</a></li>
+                        <li><a href="{{ route('service.index') }}">Service</a></li>
                         <li><a href="{{ route('catService-index') }}">Cat-Service</a></li>
                         <li><a href="{{ route('about-index') }}">About</a></li>
                         <li><a href="{{ route('choose-index') }}">Choose</a></li>
