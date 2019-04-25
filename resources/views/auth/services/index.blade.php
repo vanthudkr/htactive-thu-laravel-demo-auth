@@ -24,7 +24,7 @@
                         </div><br />
                         @endif
                         <a href="{{ route('service.create') }}">
-                            <button class="button-create btn btn-primary"><i class="i-create fas fa-plus-square"></i>Create New Service</button>
+                            <button class="button-create btn btn-primary button-create"><i class="i-create fas fa-plus-square"></i>Create New Service</button>
                         </a>
                     </div>
                     <div class="card-body">
@@ -45,9 +45,9 @@
                                         <td>{{ $service -> title }}</td>
                                         <td> <img src="{{$service->image ? asset($service -> image) : 'http://placehold.it/50x50'}}" width="50" height="50" alt=""> </td>
                                         <td>{{ $service->catService ? $service->catService->title : 'Uncategorized' }}</td>
-                                        <td>{{ $service -> content }}</td>
+                                        <td>{{ str_limit($service -> content, 100) }}</td>
                                         <td>
-                                            <a href=" #"><i class="fas fa-eye"></i></a>
+                                            <a href="{{ route('service.show', $service['id']) }}"><i class="fas fa-eye"></i></a>
                                             <a href="{{ route('service.edit', $service['id']) }}"><i class="fas fa-edit"></i></a>
                                             <form style="margin-left: 36px; margin-top: -26px" action="{{ route('service.destroy', $service['id'])}}" method="post">
                                                 {{csrf_field()}}
@@ -59,7 +59,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div style="padding-left: 40%">{{$services->links()}}</div>
+                            <div class="paginate">{{$services->links()}}</div>
                         </div>
                     </div>
                 </div>

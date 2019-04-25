@@ -24,8 +24,9 @@
                         @endif
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('service.update', $service['id']) }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('service.update', $service->id) }}" method="post" enctype="multipart/form-data">
                             {{csrf_field()}}
+                            <input type="hidden" name="_method" value="PUT">
                             <div class="form-group row">
                                 <label for="title" class="col-sm-2 col-form-label">Title</label>
                                 <div class="col-sm-10">
@@ -37,7 +38,7 @@
                                 <div class="col-sm-10">
                                     <select class="form-control" id="category" name="catService_id">
                                         @foreach($catService as $catService)
-                                        <option value="{{ $catService }}" @if($service->catService->title === $catService->title) selected='selected' @endif> {{ $catService->title }}</option>
+                                        <option value="{{ $catService->id }}" @if($service->catService->title == $catService->title) selected='selected' @endif> {{ $catService->title }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -58,7 +59,7 @@
                                 </div>
                             </div>
                             <a class="btn btn-primary" href="{{ route('service.index') }}">Cancel</a>
-                            <button style="float: right" type="submit" class="btn btn-primary">Submit</button>
+                            <button style="float: right" type="submit" class="btn btn-primary">Update</button>
                         </form>
                     </div>
                 </div>

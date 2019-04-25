@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\App;
 class CatService extends Model
 {
     protected $fillable = [
-        'title', 'icon', 'content', 'parent_id', 'is_deleted'
+        'id', 'title', 'icon', 'content', 'parent_id', 'is_deleted'
     ];
 
     public function service()

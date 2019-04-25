@@ -6,6 +6,8 @@ use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\CatService;
+// use Symfony\Component\HttpFoundation\Session\Session;
+use Session;
 
 class ServiceController extends Controller
 {
@@ -56,7 +58,7 @@ class ServiceController extends Controller
         }
 
         Service::create($input);
-        return back()->with('success', 'Service has been created');
+        return redirect('admin/service')->with('success', 'The service ' . $input['title'] . ' has been created');
     }
 
     /**
@@ -65,8 +67,11 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function show(Service $service)
-    { }
+    public function show($id)
+    {
+        $service = Service::findOrFail($id);
+        return view('auth.services.show', compact('service'));
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -91,29 +96,25 @@ class ServiceController extends Controller
     public function update(Request $request, $id)
     {
         $service = Service::findOrFail($id);
-        $catService = CatService::findOrFail($id);
         $this->validate($request, [
-            'title' => 'required|min:5|max:35',
-            'content' => 'required|min:5|max:500',
-            'catService_id',
+            'title' => 'required',
+            'content' => 'required',
+            'catService_id' => 'required',
+            'is_deleted',
             'image',
-        ], [
-            'title.required' => 'The title field is required.',
-            'title.min' => 'The title must be at least 5 characters.',
-            'title.max' => 'The title may not be greater than 35 characters.',
-            'content.required' => 'The content field is required.',
-            'content.min' => 'The content must be at least 5 characters.',
-            'content.max' => 'The content may not be greater than 500 characters.',
         ]);
-
         $input = $request->all();
+        $input['is_deleted'] = 1;
         if ($request->hasFile('image')) {
             $filename = $request->file('image')->getClientOriginalName();
             $request->image->move('img/', $filename);
             $input['image'] = 'img/' . $filename;
         }
+
+        $image = $service->image;
+        File::delete($image);
         $service->update($input);
-        return redirect('auth.services.index')->with('success', 'The service has edited!');
+        return redirect('admin/service')->with('success', 'The service ' . $service->title . ' has edited!');
     }
 
     /**

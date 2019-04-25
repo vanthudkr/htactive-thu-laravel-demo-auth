@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Choose;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class ChooseController extends Controller
 {
@@ -14,7 +15,7 @@ class ChooseController extends Controller
      */
     public function index()
     {
-        $chooses = Choose::all();
+        $chooses = Choose::where('is_deleted', '1')->orderBy('id', 'asc')->paginate(3);
         return view('auth.chooses.index', compact('chooses'));
     }
 
@@ -25,7 +26,7 @@ class ChooseController extends Controller
      */
     public function create()
     {
-        //
+        return view('auth.chooses.create');
     }
 
     /**
@@ -36,7 +37,22 @@ class ChooseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'title' => 'required',
+            'image' => 'required',
+            'content' => 'required',
+            'is_deleted'
+        ]);
+
+        $input = $request->all();
+        $input['is_deleted'] = 1;
+        if ($request->hasFile('image')) {
+            $filename = $request->file('image')->getClientOriginalName();
+            $request->image->move('img/', $filename);
+            $input['image'] = 'img/' . $filename;
+        };
+        Choose::create($input);
+        return redirect('admin/choose')->with('success', 'The choose ' . $input['title'] . ' has been created');
     }
 
     /**
@@ -45,9 +61,10 @@ class ChooseController extends Controller
      * @param  \App\Choose  $choose
      * @return \Illuminate\Http\Response
      */
-    public function show(Choose $choose)
+    public function show($id)
     {
-        //
+        $choose = Choose::findOrFail($id);
+        return view('auth.chooses.show', compact('choose'));
     }
 
     /**
@@ -56,9 +73,10 @@ class ChooseController extends Controller
      * @param  \App\Choose  $choose
      * @return \Illuminate\Http\Response
      */
-    public function edit(Choose $choose)
+    public function edit($id)
     {
-        //
+        $choose = Choose::findOrFail($id);
+        return view('auth.chooses.edit', compact('choose'));
     }
 
     /**
@@ -68,9 +86,29 @@ class ChooseController extends Controller
      * @param  \App\Choose  $choose
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Choose $choose)
+    public function update(Request $request, $id)
     {
-        //
+        $choose = Choose::findOrFail($id);
+
+        $this->validate($request, [
+            'title' => 'required',
+            'content' => 'required',
+            'image',
+            'is_deleted'
+        ]);
+
+        $input = $request->all();
+        $input['is_deleted'] = 1;
+        if ($request->hasFile('image')) {
+            $filename = $request->file('image')->getClientOriginalName();
+            $request->image->move('img/', $filename);
+            $input['image'] = 'img/' . $filename;
+        };
+
+        $image = $choose->image;
+        File::delete($image);
+        $choose->update($input);
+        return redirect('admin/choose')->with('success', 'The choose ' . $choose->title . ' has edited!');
     }
 
     /**
@@ -79,8 +117,12 @@ class ChooseController extends Controller
      * @param  \App\Choose  $choose
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Choose $choose)
+    public function destroy($id)
     {
-        //
+        $choose = Choose::findOrFail($id);
+        $image = $choose->image;
+        File::delete($image);
+        $choose->delete($id);
+        return back()->with('success', 'You are deleted a record.');
     }
 }

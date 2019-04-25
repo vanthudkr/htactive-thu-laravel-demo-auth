@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CatService;
 use Illuminate\Http\Request;
+use Dotenv\Regex\Success;
 
 class CatServiceController extends Controller
 {
@@ -14,7 +15,7 @@ class CatServiceController extends Controller
      */
     public function index()
     {
-        $catServices = CatService::all();
+        $catServices = CatService::where('is_deleted', '1')->paginate(3);
         return view('auth.catServices.index', compact('catServices'));
     }
 
@@ -25,7 +26,7 @@ class CatServiceController extends Controller
      */
     public function create()
     {
-        //
+        return view('auth.catServices.create');
     }
 
     /**
@@ -36,7 +37,21 @@ class CatServiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'id',
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'icon' => 'required|max:255',
+            'parent_id',
+            'is_deleted'
+        ]);
+
+        $input = $request->all();
+        $input['is_deleted'] = 1;
+        $input['parent_id'] = 13;
+        CatService::create($input);
+
+        return redirect('admin/catService')->with('success', 'The category of service ' . $input['title'] . ' has been created');
     }
 
     /**
@@ -45,10 +60,12 @@ class CatServiceController extends Controller
      * @param  \App\CatService  $catService
      * @return \Illuminate\Http\Response
      */
-    public function show(CatService $catService)
+    public function show($id)
     {
-        //
+        $catService = CatService::findOrFail($id);
+        return view('auth.catServices.show', compact('catService'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -56,9 +73,10 @@ class CatServiceController extends Controller
      * @param  \App\CatService  $catService
      * @return \Illuminate\Http\Response
      */
-    public function edit(CatService $catService)
+    public function edit($id)
     {
-        //
+        $catService = CatService::findOrFail($id);
+        return view('auth.catServices.edit', compact('catService'));
     }
 
     /**
@@ -68,9 +86,23 @@ class CatServiceController extends Controller
      * @param  \App\CatService  $catService
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CatService $catService)
+    public function update(Request $request, $id)
     {
-        //
+        $catService = CatService::findOrFail($id);
+        $this->validate($request, [
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'icon' => 'required|max:255',
+            'parent_id',
+            'is_deleted'
+        ]);
+
+        $input = $request->all();
+        $input['is_deleted'] = 1;
+        $input['parent_id'] = 1;
+        $catService->update($input);
+
+        return redirect('admin/catService')->with('success', 'The Category of Service ' . $catService->title . ' has edited!');
     }
 
     /**
@@ -79,8 +111,11 @@ class CatServiceController extends Controller
      * @param  \App\CatService  $catService
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CatService $catService)
+    public function destroy($id)
     {
-        //
+        $catService = CatService::findOrFail($id);
+        $catService->delete();
+
+        return redirect('admin/catSer   vice')->with('success', 'The category of service has been deleted');
     }
 }

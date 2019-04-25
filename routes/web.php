@@ -1,6 +1,9 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Service;
+use App\About;
+use App\CatService;
+use App\Http\Controllers\CatServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,8 +39,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::resource('/service', 'ServiceController');
 
     Route::get('about', 'AboutController@index')->name('about-index');
+    Route::resource('about', 'AboutController');
 
     Route::get('catService', 'CatServiceController@index')->name('catService-index');
+    Route::resource('catService', 'CatServiceController');
 
     Route::get('choose', 'ChooseController@index')->name('choose-index');
+    Route::resource('choose', 'ChooseController');
 });
