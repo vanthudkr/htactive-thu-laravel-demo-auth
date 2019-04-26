@@ -29,7 +29,8 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        $catService = CatService::pluck('title', 'id')->all();
+        $catServices = CatService::where('is_deleted', '1')->get();
+        $catService = $catServices->pluck('title', 'id')->all();
         return view('auth.services.create', compact('catService'));
     }
 
@@ -41,6 +42,7 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->validate($request, [
             'title' => 'required',
             'content' => 'required',
@@ -81,9 +83,11 @@ class ServiceController extends Controller
      */
     public function edit($id)
     {
+        $catServices = CatService::where('is_deleted', '1')->get();
+        $catService = $catServices->pluck('title', 'id')->all();
         $service = Service::findOrFail($id);
-        $catService = CatService::all();
-        return view('auth.services.edit', compact('service', 'catService'));
+
+        return view('auth.services.edit', compact('service', 'catServices'));
     }
 
     /**
@@ -114,6 +118,7 @@ class ServiceController extends Controller
         $image = $service->image;
         File::delete($image);
         $service->update($input);
+
         return redirect('admin/service')->with('success', 'The service ' . $service->title . ' has edited!');
     }
 
@@ -126,9 +131,11 @@ class ServiceController extends Controller
     public function destroy($id)
     {
         $service = Service::find($id);
+        $service['is_deleted'] = 0;
         $image = $service->image;
         File::delete($image);
         $service->delete();
+
         return redirect('admin/service')->with('success', 'Service has been deleted');
     }
 

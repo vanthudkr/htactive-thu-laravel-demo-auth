@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CatService;
+use App\Service;
 use Illuminate\Http\Request;
 use Dotenv\Regex\Success;
 
@@ -114,8 +115,17 @@ class CatServiceController extends Controller
     public function destroy($id)
     {
         $catService = CatService::findOrFail($id);
-        $catService->delete();
+        $catService->is_deleted = 0;
+        $catService->save();
 
-        return redirect('admin/catSer   vice')->with('success', 'The category of service has been deleted');
+        $services = Service::where("catService_id", $id)->first();
+        $services->changeIsDelete($id);
+
+        // $services = Service::where("catService_id", $id)->first();
+        // if ($services) {
+        //     $services->is_deleted = 0;
+        //     $services->save();
+        // }
+        return redirect('admin/catService')->with('success', 'The category of service has been deleted');
     }
 }

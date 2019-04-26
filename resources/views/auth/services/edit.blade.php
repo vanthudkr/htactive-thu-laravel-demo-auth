@@ -5,23 +5,19 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8 offset-md-2">
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div><br />
+                @endif
                 <div class="card">
                     <div class="card-header card-header-primary">
                         <p class="card-title font-weight-bold text-center "> You are editing with <span style="color: gold">{{$service -> title}}</span> title</p>
-                        @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div><br />
-                        @endif
-                        @if (\Session::has('success'))
-                        <div class="alert alert-success">
-                            <p>{{ \Session::get('success') }}</p>
-                        </div><br />
-                        @endif
                     </div>
                     <div class="card-body">
                         <form action="{{ route('service.update', $service->id) }}" method="post" enctype="multipart/form-data">
@@ -37,8 +33,8 @@
                                 <label class="col-sm-2 col-form-label" for="category">Category</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" id="category" name="catService_id">
-                                        @foreach($catService as $catService)
-                                        <option value="{{ $catService->id }}" @if($service->catService->title == $catService->title) selected='selected' @endif> {{ $catService->title }}</option>
+                                        @foreach($catServices as $catService)
+                                        <option value="{{ $catService->id }}" @if($service->catService->title == $catService->title) selected='selected' @endif> {{$catService->title}}</option>
                                         @endforeach
                                     </select>
                                 </div>

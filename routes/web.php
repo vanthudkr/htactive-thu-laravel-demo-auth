@@ -4,6 +4,8 @@ use App\Service;
 use App\About;
 use App\CatService;
 use App\Http\Controllers\CatServiceController;
+use App\Http\Controllers\SearchController;
+use Illuminate\Support\Facades\Input;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,4 +48,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::get('choose', 'ChooseController@index')->name('choose-index');
     Route::resource('choose', 'ChooseController');
+
+    Route::get('/search', function () {
+        $search = Input::get('search');
+        $service = Service::where('title', 'LIKE', '%' . $search . '%')->orWhere('content', 'LIKE', '%' . $search . '%')->get();
+        if (count($service) > 0)
+            return view('fullTextSearch')->withDetails($service)->withQuery($search);
+        else
+            return view('fullTextSearch')->withMessage('No Details found. Try to search again !');
+    })->name('search');
+
+    // Route::get('search', 'SearchController@search')->name('search');
 });

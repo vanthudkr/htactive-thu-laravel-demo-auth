@@ -14,4 +14,14 @@ class Service extends Model
     {
         return $this->belongsTo('App\CatService', 'catService_id');
     }
+
+    public function changeIsDelete($id)
+    {
+        $services = Service::where("catService_id", $id)->first();
+
+        $services->is_deleted = 0;
+        $services->save();
+
+        return  $services;
+    }
 }

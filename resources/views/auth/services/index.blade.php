@@ -5,24 +5,16 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
+                @if(Session::has('success'))
+                <div class="alert alert-success alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <p>{{ Session::get('success') }}</p>
+                </div>
+                @endif
                 <div class="card">
                     <div class="card-header card-header-primary">
                         <h4 class="card-title ">Service Table</h4>
                         <p class="card-category"> Here you can do anything !!!</p>
-                        @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div><br />
-                        @endif
-                        @if (\Session::has('success'))
-                        <div class="alert alert-success">
-                            <p>{{ \Session::get('success') }}</p>
-                        </div><br />
-                        @endif
                         <a href="{{ route('service.create') }}">
                             <button class="button-create btn btn-primary button-create"><i class="i-create fas fa-plus-square"></i>Create New Service</button>
                         </a>
@@ -44,7 +36,7 @@
                                         <td>{{ $service -> id }}</td>
                                         <td>{{ $service -> title }}</td>
                                         <td> <img src="{{$service->image ? asset($service -> image) : 'http://placehold.it/50x50'}}" width="50" height="50" alt=""> </td>
-                                        <td>{{ $service->catService ? $service->catService->title : 'Uncategorized' }}</td>
+                                        <td>{{ $service->catService->title }}</td>
                                         <td>{{ str_limit($service -> content, 100) }}</td>
                                         <td>
                                             <a href="{{ route('service.show', $service['id']) }}"><i class="fas fa-eye"></i></a>
